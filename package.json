@@ -13,10 +13,12 @@
     "#api/*.ts": "./src/api/*.ts"
   },
   "scripts": {
-    "start:dev:api": "node --env-file .env --watch ./src/apps/api.ts"
+    "start:dev:api": "node --env-file .env --watch ./src/apps/api.ts",
+    "test": "node --test"
   },
   "dependencies": {
     "@hono/node-server": "1.13.7",
+    "@hono/zod-validator": "0.4.2",
     "hono": "4.6.18",
     "hono-pino": "0.7.0",
     "pino": "9.6.0",
