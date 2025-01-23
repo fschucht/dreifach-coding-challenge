@@ -1,0 +1,23 @@
+{
+  "name": "dreifach-coding-challenge",
+  "type": "module",
+  "version": "1.0.0",
+  "engines": {
+    "node": "=23.6.1"
+  },
+  "packageManager": "pnpm@10.0.0",
+  "imports": {
+    "#config/*.ts": "./src/config/*.ts",
+    "#domain/*.ts": "./src/domain/*.ts",
+    "#infra/*.ts": "./src/infra/*.ts",
+    "#api/*.ts": "./src/api/*.ts"
+  },
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/node": "22.10.9",
+    "knip": "5.43.1",
+    "typescript": "5.7.3"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  // Enable project-wide typescript type-checking
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+
+  // Enable biome linting and formatting
+  "biome.enabled": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "always",
+    "source.organizeImports.biome": "always"
+  },
+
+  // Set default formatter
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
+}
