@@ -12,12 +12,21 @@
     "#infra/*.ts": "./src/infra/*.ts",
     "#api/*.ts": "./src/api/*.ts"
   },
+  "scripts": {
+    "start:dev:api": "node --env-file .env --watch ./src/apps/api.ts"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@hono/node-server": "1.13.7",
+    "hono": "4.6.18",
+    "hono-pino": "0.7.0",
+    "pino": "9.6.0",
+    "zod": "3.24.1"
+  },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@types/node": "22.10.9",
     "knip": "5.43.1",
+    "pino-pretty": "13.0.0",
     "typescript": "5.7.3"
   }
 }
