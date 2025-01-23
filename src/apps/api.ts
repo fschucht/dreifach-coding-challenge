@@ -46,7 +46,6 @@ const server = serve(
 
 process.on("exit", (signal) => {
   logger.info("Received SIGTERM signal", { signal });
-
   logger.info("Closing http server");
 
   server.close(() => {

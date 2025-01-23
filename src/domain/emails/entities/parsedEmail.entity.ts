@@ -1,14 +1,16 @@
 import { z } from "zod";
 
-const PARSED_EMAIL_PURPOSE = [
+export const PARSED_EMAIL_PURPOSE = [
   "NEW_POLICY_REQUEST",
   "POLICY_RENEWAL",
   "POLICY_MODIFICATION",
   "QUOTE_REQUEST",
   "INFORMATION_REQUEST",
 ] as const;
+export type ParsedEmailPurpose = (typeof PARSED_EMAIL_PURPOSE)[number];
 
-const PARSED_EMAIL_INSURANCE_TYPE = ["TRANSPORT", "PRODUCT_LIABILITY", "ENVIRONMENTAL_LIABILITY"] as const;
+export const PARSED_EMAIL_INSURANCE_TYPE = ["TRANSPORT", "PRODUCT_LIABILITY", "ENVIRONMENTAL_LIABILITY"] as const;
+export type ParsedEmailInsuranceType = (typeof PARSED_EMAIL_INSURANCE_TYPE)[number];
 
 const parsedEmailRequestBaseInsuranceSchema = z.object({
   type: z.enum(PARSED_EMAIL_INSURANCE_TYPE),
@@ -55,6 +57,8 @@ const parsedEmailRequestEntitySchema = z.object({
   purpose: z.enum(PARSED_EMAIL_PURPOSE),
   insurance: parsedEmailRequestInsuranceEntitySchema,
 });
+
+export type ParsedEmailRequestEntity = z.infer<typeof parsedEmailRequestEntitySchema>;
 
 const parsedEmailEntitySchema = z.object({
   company: z.object({

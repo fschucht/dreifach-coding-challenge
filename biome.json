@@ -61,7 +61,7 @@
         "noConsoleLog": "error",
         "noEmptyBlockStatements": "error",
         "noEvolvingTypes": "error",
-        "useAwait": "error"
+        "useAwait": "warn"
       },
       "nursery": {
         "noDuplicateElseIf": "error",

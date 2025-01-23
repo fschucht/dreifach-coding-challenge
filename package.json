@@ -14,13 +14,16 @@
   },
   "scripts": {
     "start:dev:api": "node --env-file .env --watch ./src/apps/api.ts",
-    "test": "node --test"
+    "start:dev:worker": "node --env-file .env --watch ./src/apps/worker.ts",
+    "test": "node --test --experimental-test-module-mocks"
   },
   "dependencies": {
     "@hono/node-server": "1.13.7",
     "@hono/zod-validator": "0.4.2",
+    "bullmq": "5.35.1",
     "hono": "4.6.18",
     "hono-pino": "0.7.0",
+    "ioredis": "5.4.2",
     "pino": "9.6.0",
     "zod": "3.24.1"
   },

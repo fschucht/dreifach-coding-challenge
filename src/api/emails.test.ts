@@ -1,10 +1,22 @@
 import assert from "node:assert";
-import { describe, test } from "node:test";
-import { emailsApi } from "./emails.ts";
+import { before, describe, mock, test } from "node:test";
 
 describe("Emails API", () => {
   describe("POST /emails/parse", () => {
+    let emailsQueueMockFn: ReturnType<typeof mock.fn>;
+
+    before(() => {
+      emailsQueueMockFn = mock.fn();
+      mock.module("#infra/bullmq/queues/emails.queue.ts", {
+        namedExports: {
+          emailsQueue: emailsQueueMockFn,
+        },
+      });
+    });
+
     test("it should parse the email", async () => {
+      const { emailsApi } = await import("./emails.ts");
+
       const response = await emailsApi.request("/emails/parse", {
         method: "POST",
         body: JSON.stringify({
@@ -17,6 +29,7 @@ describe("Emails API", () => {
         }),
       });
 
+      assert.equal(emailsQueueMockFn.mock.callCount(), 0);
       assert.strictEqual(response.status, 201);
       assert.deepEqual(await response.json(), {
         data: {

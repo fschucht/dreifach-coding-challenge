@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  redis:
+    container_name: redis
+    image: redis:7.4.2
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --save 60 1
+    volumes: 
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/redis:/data
+    networks:
+      - web-network
+
+networks:
+  web-network:
