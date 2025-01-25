@@ -17,7 +17,7 @@ The following tools are required to run the project:
 3. Ensure you have redis running: `docker-compose up redis -d`.
 4. Duplicate `.env.example` and rename to `.env`: `cp .env.example .env`.
 5. Update the values in `.env`.
-6. Run `pnpm run start:api:dev` and `pnpm run start:worker:dev` to start the `api` and `worker` applications.
+6. Run `pnpm run start:dev:api` and `pnpm run start:dev:worker` to start the `api` and `worker` applications.
 7. The email parsing endpoint is accessible at `POST http://localhost:3000/api/v1/emails/parse`.
 
 ### Production
