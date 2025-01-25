@@ -10,6 +10,8 @@ class EmailParserService {
   private readonly logger = new Logger(this.constructor.name);
 
   async parse(parseEmailDto: ParseEmailDto, remainingRetriesCount = 2): Promise<ParseEmailResultEntity> {
+    // We define a fallback result for the email parsing, as an error in parsing the email should not lead discard the email
+    // altogether. Instead, this allows us to keep processing the email and, for example, flag it for manual review.
     const fallbackResult: ParseEmailResultEntity = {
       result: {
         company: {},
@@ -44,6 +46,9 @@ class EmailParserService {
             `,
           },
         ],
+        // Currently, we use the legacy JSON mode to retrieve the parsed email as JSON, as the model version available
+        // at the Azure endpoint does not support the `json_schema` response format. Support was added in model version
+        // `2024-08-06` but the endpoint still uses `2024-08-01-preview` and returns an error when the response format is used.
         response_format: {
           type: "json_object",
         },
@@ -83,11 +88,7 @@ class EmailParserService {
         error: error,
       });
 
-      if (remainingRetriesCount > 0) {
-        return this.parse(parseEmailDto, remainingRetriesCount - 1);
-      }
-
-      return fallbackResult;
+      return this.parse(parseEmailDto, remainingRetriesCount - 1);
     }
   }
 
@@ -118,6 +119,10 @@ class EmailParserService {
         logprobs: true,
       });
 
+      // We ask the model to return a single value (true or false) and use it's log probabilities to calculate the
+      // confidence score. The log probability indicates the likelihood that the token should appear in the context of
+      // the prompt. Therefore, we can use it as a measurement of confidence, as a higher likelihood indicates a higher
+      // match between the instructions, email and json result.
       const logProbs = result.choices[0]?.logprobs?.content;
 
       if (logProbs?.length !== 1) {
@@ -130,10 +135,15 @@ class EmailParserService {
         const rawConfidenceScore = Math.exp(logProb.logprob);
 
         if (logProb.token === "true") {
+          // In case the model determines that the parsed email accurately reflects the email, we return the unchanged
+          // confidence score.
           return rawConfidenceScore;
         }
 
         if (logProb.token === "false") {
+          // In case the model determines that the parsed email does not accurately reflect the email, we invert the
+          // confidence score. The inverted confidence score should reflect the confidence the model has in case the model
+          // would respond with `true`.
           return 1 - rawConfidenceScore;
         }
       }

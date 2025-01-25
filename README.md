@@ -1,8 +1,39 @@
-# dreifach.ai coding-challenge
+# Coding Challenge
 
-Welcome to the dreifach.ai coding challenge! 
+## Getting Started
 
-## Task
+### Prerequisites
+
+The following tools are required to run the project:
+- [Docker](https://docs.docker.com/engine/install/) & [Docker Compose](https://docs.docker.com/compose/install/): Used for running the applications in production mode.
+- [Mise](https://mise.jdx.dev/getting-started.html): Used for providing dev tooling and running the production locally.
+
+### Development
+
+1. Run `mise install`, followed by `mise reshim` to ensure you have the required version of `node`, `pnpm`, and `lefthook` installed. 
+2. Ensure you have redis running: `docker-compose up redis -d`.
+3. Duplicate `.env.example` and rename to `.env`: `cp .env.example .env`.
+4. Update the values in `.env`.
+5. Run `pnpm run start:api:dev` and `pnpm run start:worker:dev` to start the `api` and `worker` applications.
+6. The email parsing endpoint is accessible at `POST http://localhost:3000/api/v1/emails/parse`.
+
+### Production
+
+1. Start the application using docker-compose: `docker-compose up`.
+2. The email parsing endpoint is accessible at `POST http://localhost:3000/api/v1/emails/parse`.
+
+## Project Structure
+
+The project follows a domain-driven approach with the following folder structure:
+- `api`: Contains the public endpoints through which the applications can be accessed. Currently, these use HTTP, but could use other transports, such as GRPC or Websockets in the future.
+- `apps`: Contains the entrypoints for each application, currently `api`, the email parsing microservice, and `worker`, the application handling incoming events.
+- `config`: Contains any configurations, split by their app, domain, or infra modules.
+- `domain`: Contains domain-specific logic in isolated modules.
+- `infra`: Contains infrastructure-specific logic in isolated modules.
+
+## Challenge Description
+
+### Task
 
 At dreifach.ai we work a lot with industry insurance brokers for small and medium-sized enterprises. A typical problem these brokers face is that they receive many emails that have to be manually processed by the back office team. This is a tedious, boring task that takes up a lot of time and is prone to errors.
 
@@ -40,7 +71,7 @@ To test your service, we have generated synthetic emails that you can use for de
 * Give a confidence score for the classification.
 
 
-## Instructions
+### Instructions
 
 You can use the programming language you are most comfortable with, though we recommend using TypeScript.
 For the message queue you can use any message queue you like, though we recommend using RabbitMQ or Redis.
