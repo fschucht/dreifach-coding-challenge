@@ -11,16 +11,19 @@ The following tools are required to run the project:
 ### Development
 
 1. Run `mise install`, followed by `mise reshim` to ensure you have the required version of `node`, `pnpm`, and `lefthook` installed. 
-2. Ensure you have redis running: `docker-compose up redis -d`.
-3. Duplicate `.env.example` and rename to `.env`: `cp .env.example .env`.
-4. Update the values in `.env`.
-5. Run `pnpm run start:api:dev` and `pnpm run start:worker:dev` to start the `api` and `worker` applications.
-6. The email parsing endpoint is accessible at `POST http://localhost:3000/api/v1/emails/parse`.
+2. Install dependencies: `pnpm install`
+3. Ensure you have redis running: `docker-compose up redis -d`.
+4. Duplicate `.env.example` and rename to `.env`: `cp .env.example .env`.
+5. Update the values in `.env`.
+6. Run `pnpm run start:api:dev` and `pnpm run start:worker:dev` to start the `api` and `worker` applications.
+7. The email parsing endpoint is accessible at `POST http://localhost:3000/api/v1/emails/parse`.
 
 ### Production
 
 1. Start the application using docker-compose: `docker-compose up`.
-2. The email parsing endpoint is accessible at `POST http://localhost:3000/api/v1/emails/parse`.
+2. Duplicate `.env.example` and rename to `.env`: `cp .env.example .env`.
+3. Update the values in `.env`.
+4. The email parsing endpoint is accessible at `POST http://localhost:3000/api/v1/emails/parse`.
 
 ## Project Structure
 
