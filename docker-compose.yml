@@ -13,5 +13,41 @@ services:
     networks:
       - web-network
 
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: pnpm run start:prod:api
+    environment:
+      - REDIS_HOST=redis
+    env_file: 
+      - path: ./.env
+        required: false
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - web-network
+    depends_on:
+      - redis
+
+  worker:
+    container_name: worker
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: pnpm run start:prod:worker
+    environment:
+      - REDIS_HOST=redis
+    env_file: 
+      - path: ./.env
+        required: false
+    restart: always
+    networks:
+      - web-network
+    depends_on:
+      - redis
+
 networks:
   web-network:

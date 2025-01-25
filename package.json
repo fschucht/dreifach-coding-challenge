@@ -14,7 +14,9 @@
   },
   "scripts": {
     "start:dev:api": "node --env-file .env --watch ./src/apps/api.ts",
-    "start:dev:worker": "node --env-file .env --watch ./src/apps/worker.ts"
+    "start:prod:api": "node ./src/apps/api.ts",
+    "start:dev:worker": "node --env-file .env --watch ./src/apps/worker.ts",
+    "start:prod:worker": "node ./src/apps/worker.ts"
   },
   "dependencies": {
     "@azure/openai": "2.0.0",
