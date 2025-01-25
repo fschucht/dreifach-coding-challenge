@@ -17,7 +17,7 @@ app.use(pinoLogger({ pino: pinoConfig }));
 app.use(cors());
 app.use(compress());
 
-app.route("/", emailsApi);
+app.route("/api/v1", emailsApi);
 
 app.notFound((context) => {
   return context.json({
