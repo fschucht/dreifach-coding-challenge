@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const PARSED_EMAIL_PURPOSE = [
+const PARSED_EMAIL_PURPOSE = [
   "NEW_POLICY_REQUEST",
   "POLICY_RENEWAL",
   "POLICY_MODIFICATION",
@@ -9,7 +9,7 @@ export const PARSED_EMAIL_PURPOSE = [
 ] as const;
 export type ParsedEmailPurpose = (typeof PARSED_EMAIL_PURPOSE)[number];
 
-export const PARSED_EMAIL_INSURANCE_TYPE = ["TRANSPORT", "PRODUCT_LIABILITY", "ENVIRONMENTAL_LIABILITY"] as const;
+const PARSED_EMAIL_INSURANCE_TYPE = ["TRANSPORT", "PRODUCT_LIABILITY", "ENVIRONMENTAL_LIABILITY"] as const;
 export type ParsedEmailInsuranceType = (typeof PARSED_EMAIL_INSURANCE_TYPE)[number];
 
 const parsedEmailRequestBaseInsuranceSchema = z.object({
@@ -23,8 +23,8 @@ const parsedEmailRequestTransportInsuranceSchema = parsedEmailRequestBaseInsuran
   itemOrActivity: z.object({
     name: z.string(),
     value: z.number().optional(),
-    origin: z.string(),
-    destination: z.string(),
+    origin: z.string().optional(),
+    destination: z.string().optional(),
   }),
 });
 
