@@ -1,5 +1,7 @@
 # Coding Challenge
 
+https://github.com/user-attachments/assets/a20689f4-9d39-45da-9880-870bbae75785
+
 ## Getting Started
 
 ### Prerequisites
