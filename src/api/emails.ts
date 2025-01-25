@@ -4,8 +4,8 @@ import { parseEmailDtoSchema } from "#domain/emails/dtos/parseEmail.dto.ts";
 import { emailParserService } from "#domain/emails/services/emailParser.service.ts";
 import { emailsQueue } from "#infra/bullmq/queues/emails.queue.ts";
 
-export const emailsApi = new Hono().basePath("/emails").post("/parse", zValidator("json", parseEmailDtoSchema), (context) => {
-  const parsedEmail = emailParserService.parse(context.req.valid("json"));
+export const emailsApi = new Hono().basePath("/emails").post("/parse", zValidator("json", parseEmailDtoSchema), async (context) => {
+  const parsedEmail = await emailParserService.parse(context.req.valid("json"));
 
   for (const request of parsedEmail.requests) {
     emailsQueue.add(request.purpose, {

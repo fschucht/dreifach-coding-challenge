@@ -60,7 +60,7 @@ const parsedEmailRequestEntitySchema = z.object({
 
 export type ParsedEmailRequestEntity = z.infer<typeof parsedEmailRequestEntitySchema>;
 
-const parsedEmailEntitySchema = z.object({
+export const parsedEmailEntitySchema = z.object({
   company: z.object({
     name: z.string().optional(),
   }),
