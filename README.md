@@ -12,7 +12,7 @@ The following tools are required to run the project:
 
 ### Development
 
-1. Run `mise install`, followed by `mise reshim` to ensure you have the required version of `node`, `pnpm`, and `lefthook` installed. 
+1. Run `mise install`, followed by `mise reshim` to ensure you have the required version of `node` and `lefthook` installed. 
 2. Install dependencies: `pnpm install`
 3. Ensure you have redis running: `docker-compose up redis -d`.
 4. Duplicate `.env.example` and rename to `.env`: `cp .env.example .env`.
