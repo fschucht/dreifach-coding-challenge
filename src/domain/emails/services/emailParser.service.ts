@@ -26,31 +26,28 @@ class EmailParserService {
     }
 
     try {
-      const result = await openAiClient.chat.completions.create({
+      const {
+        choices: [choice],
+      } = await openAiClient.chat.completions.create({
         model: openAiConfig.OPENAI_MODEL,
         messages: [
           {
             role: "system",
             content: dedent`
-            Parse the following emails into the structured JSON schema:
-            ${JSON.stringify(zodToJsonSchema(parsedEmailEntitySchema))}
-          `,
-          },
-          {
-            role: "user",
-            content: dedent`
-            From: ${parseEmailDto.from}
-            Subject: ${parseEmailDto.subject}
-            Body: ${parseEmailDto.body}
-          `,
+              Parse the following email into the structured JSON schema.
+
+              JSON Schema:
+              \`${JSON.stringify(zodToJsonSchema(parsedEmailEntitySchema))}\`
+
+              Email:
+              \`${JSON.stringify(parseEmailDto)}\`
+            `,
           },
         ],
         response_format: {
           type: "json_object",
         },
       });
-
-      const choice = result.choices[0];
 
       if (choice?.finish_reason !== "stop") {
         return this.parse(parseEmailDto, remainingRetriesCount - 1);
@@ -105,7 +102,8 @@ class EmailParserService {
               Does the extracted JSON data accurately reflect the requests made in the email below?
               Do the extracted request purposes and insurance types match the original email?
               Do the extracted insurance details match the original email?
-              Does the extracted data make logical sense based on the original email?
+              Does the extracted data contain data that is not present in the original email?
+              Does the extracted data miss data present in the original email?
 
               Respond with just one word, the boolean true or false. You must output the word 'true', or the word 'false', nothing else.
 

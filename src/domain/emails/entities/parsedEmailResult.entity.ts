@@ -12,53 +12,13 @@ export type ParsedEmailPurpose = (typeof PARSED_EMAIL_PURPOSE)[number];
 const PARSED_EMAIL_INSURANCE_TYPE = ["TRANSPORT", "PRODUCT_LIABILITY", "ENVIRONMENTAL_LIABILITY"] as const;
 export type ParsedEmailInsuranceType = (typeof PARSED_EMAIL_INSURANCE_TYPE)[number];
 
-const parsedEmailRequestBaseInsuranceSchema = z.object({
-  type: z.enum(PARSED_EMAIL_INSURANCE_TYPE),
-  startDate: z.coerce.date().optional(),
-  coveredEmployeesCount: z.number().int().optional(),
-});
+function treatEmptyValueAsUndefined(value: unknown): string | undefined {
+  if (typeof value === "string" && value !== "null" && value.trim().length > 0) {
+    return value;
+  }
 
-const parsedEmailRequestTransportInsuranceSchema = parsedEmailRequestBaseInsuranceSchema.extend({
-  type: z.literal("TRANSPORT"),
-  itemOrActivity: z.object({
-    name: z.string(),
-    value: z.number().optional(),
-    origin: z.string().optional(),
-    destination: z.string().optional(),
-  }),
-});
-
-// Product Liability-specific schema
-const parsedEmailRequestProductLiabilityInsuranceSchema = parsedEmailRequestBaseInsuranceSchema.extend({
-  type: z.literal("PRODUCT_LIABILITY"),
-  itemOrActivity: z.object({
-    name: z.string(),
-    value: z.number().optional(),
-  }),
-});
-
-// Environmental Liability-specific schema
-const parsedEmailRequestEnvironmentalLiabilityInsuranceSchema = parsedEmailRequestBaseInsuranceSchema.extend({
-  type: z.literal("ENVIRONMENTAL_LIABILITY"),
-  itemOrActivity: z.object({
-    name: z.string(),
-    value: z.number().optional(),
-  }),
-});
-
-// Combined insurance schema (discriminated union)
-const parsedEmailRequestInsuranceEntitySchema = z.discriminatedUnion("type", [
-  parsedEmailRequestTransportInsuranceSchema,
-  parsedEmailRequestProductLiabilityInsuranceSchema,
-  parsedEmailRequestEnvironmentalLiabilityInsuranceSchema,
-]);
-
-const parsedEmailRequestEntitySchema = z.object({
-  purpose: z.enum(PARSED_EMAIL_PURPOSE),
-  insurance: parsedEmailRequestInsuranceEntitySchema,
-});
-
-export type ParsedEmailRequestEntity = z.infer<typeof parsedEmailRequestEntitySchema>;
+  return undefined;
+}
 
 export const parsedEmailEntitySchema = z.object({
   company: z.object({
@@ -68,7 +28,51 @@ export const parsedEmailEntitySchema = z.object({
     name: z.string().optional(),
     email: z.string().email(),
   }),
-  requests: z.array(parsedEmailRequestEntitySchema),
+  requests: z.array(
+    z
+      .object({
+        purpose: z.enum(PARSED_EMAIL_PURPOSE).default("INFORMATION_REQUEST"),
+        insurance: z
+          .object({
+            type: z.enum(PARSED_EMAIL_INSURANCE_TYPE),
+            desiredCoverageStartDate: z.coerce.date().optional().describe("The desired coverage start date of the insurance."),
+            coveredEmployeesCount: z.coerce
+              .number()
+              .int()
+              .optional()
+              .describe("The number of employees covered by the insurance (if applicable)."),
+            insuredItemOrActivity: z
+              .object({
+                name: z.coerce
+                  .string()
+                  .describe(
+                    "The name of the insured item or activity which should be covered by the insurance (written in the language of the email).",
+                  ),
+                value: z.coerce
+                  .number()
+                  .transform((value) => (value === 0 ? undefined : value))
+                  .optional()
+                  .describe("The insured value of the item or activity (if applicable)."),
+                origin: z.coerce
+                  .string()
+                  .transform(treatEmptyValueAsUndefined)
+                  .optional()
+                  .describe("The origin of the transport activity (only applicable to TRANSPORT insurance when mentioned in the email)."),
+                destination: z.coerce
+                  .string()
+                  .transform(treatEmptyValueAsUndefined)
+                  .optional()
+                  .describe(
+                    "The destination of the transport activity (only applicable to TRANSPORT insurance when mentioned in the email).",
+                  ),
+              })
+              .describe("The insured item or activity."),
+          })
+          .optional()
+          .describe("All infos about the insurance mentioned in the email."),
+      })
+      .describe("All infos about each request made in the email. Only include requests matching one of the purposes."),
+  ),
 });
 
 export type ParsedEmailEntity = z.infer<typeof parsedEmailEntitySchema>;
