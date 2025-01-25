@@ -72,3 +72,10 @@ export const parsedEmailEntitySchema = z.object({
 });
 
 export type ParsedEmailEntity = z.infer<typeof parsedEmailEntitySchema>;
+
+export const parseEmailResultEntitySchema = z.object({
+  result: parsedEmailEntitySchema,
+  confidenceScore: z.number().int(),
+});
+
+export type ParseEmailResultEntity = z.infer<typeof parseEmailResultEntitySchema>;
